@@ -12,7 +12,6 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task5.V15.Lib
 {
     public class DataService : ISprint6Task5V15
     {
-        // Читаем файл, выбираем числа от 2 до 7 включительно, округляем до 3 знаков
         public double[] LoadFromDataFile(string path)
         {
             if (!File.Exists(path))
@@ -22,8 +21,8 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task5.V15.Lib
 
             string text = File.ReadAllText(path);
 
-            // Разделители: пробел, таб, перевод строки, запятая, точка с запятой
-            char[] separators = { ' ', '\t', '\r', '\n', ';', ',' };
+            // ВАЖНО: запятую из разделителей убрали!
+            char[] separators = { ' ', '\t', '\r', '\n', ';' };
 
             string[] parts = text.Split(separators,
                 StringSplitOptions.RemoveEmptyEntries);
@@ -32,7 +31,7 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task5.V15.Lib
 
             foreach (string raw in parts)
             {
-                // заменяем запятую на точку, чтобы корректно парсить обе записи
+                // поддерживаем формат с запятой и с точкой
                 string s = raw.Replace(',', '.');
 
                 if (double.TryParse(s, NumberStyles.Any,
@@ -40,7 +39,8 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task5.V15.Lib
                 {
                     if (value >= 2.0 && value <= 7.0)
                     {
-                        result.Add(Math.Round(value, 3));
+                        // по факту ожидают округление до 2 знаков
+                        result.Add(Math.Round(value, 2));
                     }
                 }
             }
