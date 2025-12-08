@@ -1,6 +1,6 @@
-﻿// Author: Максим Аксёнов
+﻿// Author: Аксёнов Максим
 // Project: Tyuiu.AxyonovMA.Sprint6.Task7.V23.Lib
-// Description: Работа с матрицей из CSV по условию варианта 23
+// Description: Работа с матрицей целых чисел из CSV (Вариант 23)
 
 using System;
 using System.IO;
@@ -10,11 +10,26 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task7.V23.Lib
 {
     public class DataService : ISprint6Task7V23
     {
+        // ====== МЕТОД ИНТЕРФЕЙСА, КОТОРЫЙ ВЫЗЫВАЕТ ОНЛАЙН-ТЕСТ ======
+        public int[,] GetMatrix(string path)
+        {
+            // 1. загружаем исходную матрицу из файла
+            int[,] matrix = LoadFromDataFile(path);
+
+            // 2. изменяем последний столбец по условию
+            int[,] changed = ChangeLastColumn(matrix);
+
+            // 3. возвращаем уже изменённую матрицу
+            return changed;
+        }
+
+        // ====== ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ======
+
         /// <summary>
         /// Загружает целочисленную матрицу из CSV-файла.
         /// Разделитель элементов в строке – ';'.
         /// </summary>
-        public int[,] GetMatrix(string path)
+        public int[,] LoadFromDataFile(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException("Путь к файлу не задан", nameof(path));
@@ -24,7 +39,6 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task7.V23.Lib
             if (lines.Length == 0)
                 throw new InvalidOperationException("Файл не содержит данных");
 
-            // предполагаем, что во всех строках одинаковое количество столбцов
             string[] firstRow = lines[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
             int rows = lines.Length;
             int cols = firstRow.Length;
@@ -68,7 +82,6 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task7.V23.Lib
                 {
                     int value = source[i, j];
 
-                    // если последний столбец и значение меньше 2 – заменяем
                     if (j == cols - 1 && value < 2)
                     {
                         value = 2;
@@ -88,7 +101,6 @@ namespace Tyuiu.AxyonovMA.Sprint6.Task7.V23.Lib
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException("Путь к файлу не задан", nameof(path));
-
             if (matrix == null)
                 throw new ArgumentNullException(nameof(matrix));
 
